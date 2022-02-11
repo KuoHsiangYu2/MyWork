@@ -65,31 +65,13 @@ public class Cart extends HttpServlet {
         this.createTime = createTime;
     }
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public Cart() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         response.setContentType("text/html;charset=big5");
         request.setCharacterEncoding("big5");
 
@@ -139,15 +121,12 @@ public class Cart extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("messageList", list);
             }
+
             if (false == isFindData) {
                 out.println("編號輸入錯誤，資料庫裡沒有這個書籍。 <br />");
                 out.println("<a href='Input.jsp'>重回購物車</a> <br />");
                 return;
             }
-
-            // HttpSession session = request.getSession();
-            // session.setAttribute("messageList",list);
-            // session.setMaxInactiveInterval(0);
 
             response.sendRedirect("Input.jsp");
 
@@ -155,8 +134,6 @@ public class Cart extends HttpServlet {
             con.close();
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            // e.printStackTrace();
             out.print(e);
         }
 

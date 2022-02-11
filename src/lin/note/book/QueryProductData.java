@@ -22,25 +22,16 @@ public class QueryProductData extends HttpServlet {
     Statement stmt = null;
     ResultSet rs;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public QueryProductData() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        // response.getWriter().append("Served at: ").append(request.getContextPath());
         request.setCharacterEncoding("big5");
         response.setCharacterEncoding("big5");
-        // response.setContentType("big5");
+        response.setContentType("big5");
         PrintWriter out = response.getWriter();
         out.println("<html><head></head><body>");
 
@@ -66,15 +57,12 @@ public class QueryProductData extends HttpServlet {
             out.print("</body></html>");
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            // e.printStackTrace();
             out.print(e);
         } finally {
             try {
                 stmt.close();
                 con.close();
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
 
             }
@@ -83,13 +71,9 @@ public class QueryProductData extends HttpServlet {
 
     }
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
