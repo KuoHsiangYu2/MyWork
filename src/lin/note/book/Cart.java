@@ -22,10 +22,6 @@ import javax.servlet.http.HttpSession;
 public class Cart extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    Connection con = null;
-    Statement stmt = null;
-    ResultSet rs;
-
     List<Cart> list = new ArrayList<Cart>();
 
     private String booknum;
@@ -69,27 +65,30 @@ public class Cart extends HttpServlet {
         super();
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    private void doProcess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=big5");
         request.setCharacterEncoding("big5");
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
 
         PrintWriter out = response.getWriter();
         boolean isFindData = false;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/book?characterEncoding=utf-8",
-                    "root", "");
-            stmt = (Statement) con.createStatement();
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/book?characterEncoding=utf-8", "root", "");
+            statement = connection.createStatement();
 
             String booknum = request.getParameter("booknum");
 
-            rs = stmt.executeQuery("select * from product WHERE booknum = '" + booknum + "' ");
-            while (true == rs.next()) {
+            resultSet = statement.executeQuery("select * from product WHERE booknum = '" + booknum + "' ");
+
+            while (true == resultSet.next()) {
                 isFindData = true;
-                String bookname = rs.getString("bookname");
-                String price = rs.getString("price");
+                String bookname = resultSet.getString("bookname");
+                String price = resultSet.getString("price");
 
                 Date createTime = new Date();
                 Cart message = new Cart();
@@ -130,13 +129,24 @@ public class Cart extends HttpServlet {
 
             response.sendRedirect("Input.jsp");
 
-            stmt.close();
-            con.close();
+            statement.close();
+            connection.close();
 
         } catch (Exception e) {
             out.print(e);
         }
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doProcess(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doProcess(request, response);
     }
 
 }
