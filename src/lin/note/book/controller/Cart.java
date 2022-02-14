@@ -1,4 +1,4 @@
-package lin.note.book;
+package lin.note.book.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,48 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import lin.note.book.model.ProductBean;
+
 @WebServlet("/Cart")
 public class Cart extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    List<Cart> list = new ArrayList<Cart>();
-
-    private String booknum;
-    private String bookname;
-    private String price;
-    private Date createTime;
-
-    public String getBooknum() {
-        return booknum;
-    }
-
-    public void setBooknum(String booknum) {
-        this.booknum = booknum;
-    }
-
-    public String getBookname() {
-        return bookname;
-    }
-
-    public void setBookname(String bookname) {
-        this.bookname = bookname;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 
     public Cart() {
         super();
@@ -69,6 +32,8 @@ public class Cart extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=big5");
         request.setCharacterEncoding("big5");
+
+        List<ProductBean> list = new ArrayList<ProductBean>();
 
         Connection connection = null;
         Statement statement = null;
@@ -88,10 +53,10 @@ public class Cart extends HttpServlet {
             while (true == resultSet.next()) {
                 isFindData = true;
                 String bookname = resultSet.getString("bookname");
-                String price = resultSet.getString("price");
+                int price = resultSet.getInt("price");
 
                 Date createTime = new Date();
-                Cart message = new Cart();
+                ProductBean message = new ProductBean();
 
                 message.setBooknum(booknum);
                 message.setBookname(bookname);

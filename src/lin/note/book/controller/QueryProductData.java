@@ -1,4 +1,4 @@
-package lin.note.book;
+package lin.note.book.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
