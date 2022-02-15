@@ -9,17 +9,19 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.List"%>
-<%@ page import="lin.note.book.Cart"%>
+<%@ page import="lin.note.book.model.ProductBean"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Input.jsp</title>
 </head>
 <body>
-	<form method="post" action="Cart">
+	<form method="post" action="Cart" enctype="application/x-www-form-urlencoded">
 		編號:
 		<input type="text" name="booknum" />
 		<br />
@@ -32,7 +34,7 @@
 	    if (list != null) {
 	        for (int i = 0; i < list.size(); i++) {
 
-	            Cart message = (Cart) list.get(i);
+	            ProductBean message = (ProductBean) list.get(i);
 	            //list.remove(i);
 	%>
 
