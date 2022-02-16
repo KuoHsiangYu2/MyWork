@@ -42,9 +42,13 @@ public class Cart extends HttpServlet {
 
         PrintWriter out = response.getWriter();
         boolean isFindData = false;
+        String jdbcURL = "jdbc:mysql://localhost:3306/book?useUnicode=yes&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Taipei";
+        String user = "root";
+        String password = "";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/book?characterEncoding=utf-8", "root", "");
+            // 修正成 MySQL 10版的 class name
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(jdbcURL, user, password);
             statement = connection.createStatement();
 
             String booknum = request.getParameter("booknum");

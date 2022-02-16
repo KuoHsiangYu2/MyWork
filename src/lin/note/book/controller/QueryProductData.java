@@ -32,14 +32,19 @@ public class QueryProductData extends HttpServlet {
         Statement statement = null;
         ResultSet resultSet = null;
 
+        String jdbcURL = "jdbc:mysql://localhost:3306/book?useUnicode=yes&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Taipei";
+        String user = "root";
+        String password = "";
+
         PrintWriter out = response.getWriter();
         out.println("<html><head></head><body>");
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/book?characterEncoding=utf-8", "root", "");
+            // 修正成 MySQL 10版的 class name
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(jdbcURL, user, password);
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from product order by price desc");
+            resultSet = statement.executeQuery("SELECT booknum, bookname, type, author, price, stock, memo FROM product ORDER BY price DESC");
             out.println("<table border='1'>");
             out.println("<tr><td>編號<td>書名<td>分類<td>作者<td>價格<td>庫存<td>說明");
             while (resultSet.next()) {
@@ -48,7 +53,7 @@ public class QueryProductData extends HttpServlet {
                 out.print("<td>" + resultSet.getString("bookname"));
                 out.print("<td>" + resultSet.getString("type"));
                 out.print("<td>" + resultSet.getString("author"));
-                out.print("<td>" + resultSet.getString("price"));
+                out.print("<td>" + resultSet.getInt("price"));
                 out.print("<td>" + resultSet.getString("stock"));
                 out.print("<td>" + resultSet.getString("memo"));
             }
