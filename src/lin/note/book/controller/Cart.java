@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,11 +23,8 @@ import lin.note.book.model.ProductBean;
 
 @WebServlet("/Cart")
 public class Cart extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
-    public Cart() {
-        super();
-    }
+    private static final long serialVersionUID = 1L;
 
     private void doProcess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,23 +35,23 @@ public class Cart extends HttpServlet {
         List<ProductBean> list = new ArrayList<ProductBean>();
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         PrintWriter out = response.getWriter();
         boolean isFindData = false;
         String jdbcURL = "jdbc:mysql://localhost:3306/book?useUnicode=yes&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Taipei";
-        String user = "root";
+        String username = "root";
         String password = "";
         try {
             // 修正成 MySQL 10版的 class name
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, user, password);
-            statement = connection.createStatement();
-
             String booknum = request.getParameter("booknum");
 
-            resultSet = statement.executeQuery("select * from product WHERE booknum = '" + booknum + "' ");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(jdbcURL, username, password);
+            preparedStatement = connection.prepareStatement("SELECT bookname, price FROM product WHERE booknum = ?");
+            preparedStatement.setString(1, booknum);
+            resultSet = preparedStatement.executeQuery();
 
             while (true == resultSet.next()) {
                 isFindData = true;
@@ -98,12 +96,33 @@ public class Cart extends HttpServlet {
             }
 
             response.sendRedirect("Input.jsp");
-
-            statement.close();
-            connection.close();
-
         } catch (Exception e) {
             out.print(e);
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                    resultSet = null;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                    preparedStatement = null;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                    connection = null;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

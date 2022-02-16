@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,11 +30,11 @@ public class QueryProductData extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         String jdbcURL = "jdbc:mysql://localhost:3306/book?useUnicode=yes&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Taipei";
-        String user = "root";
+        String username = "root";
         String password = "";
 
         PrintWriter out = response.getWriter();
@@ -42,9 +43,9 @@ public class QueryProductData extends HttpServlet {
         try {
             // 修正成 MySQL 10版的 class name
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, user, password);
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT booknum, bookname, type, author, price, stock, memo FROM product ORDER BY price DESC");
+            connection = DriverManager.getConnection(jdbcURL, username, password);
+            preparedStatement = connection.prepareStatement("SELECT booknum, bookname, type, author, price, stock, memo FROM product ORDER BY price DESC");
+            resultSet = preparedStatement.executeQuery();
             out.println("<table border='1'>");
             out.println("<tr><td>編號<td>書名<td>分類<td>作者<td>價格<td>庫存<td>說明");
             while (resultSet.next()) {
@@ -65,7 +66,7 @@ public class QueryProductData extends HttpServlet {
             out.print(e);
         } finally {
             try {
-                statement.close();
+                preparedStatement.close();
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
