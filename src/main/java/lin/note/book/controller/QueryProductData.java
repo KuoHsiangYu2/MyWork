@@ -7,12 +7,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import lin.note.book.util.PropertiesTool;
 
 @WebServlet("/QueryProductData")
 public class QueryProductData extends HttpServlet {
@@ -32,9 +35,10 @@ public class QueryProductData extends HttpServlet {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        String jdbcURL = "jdbc:mysql://localhost:3306/book?useUnicode=yes&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Taipei";
-        String username = "root";
-        String password = "";
+        Properties properties = PropertiesTool.getDatabaseProperties();
+        String jdbcURL = properties.getProperty("jdbcURL");
+        String username = properties.getProperty("username");
+        String password = properties.getProperty("password");
 
         PrintWriter out = response.getWriter();
         out.println("<html><head></head><body>");

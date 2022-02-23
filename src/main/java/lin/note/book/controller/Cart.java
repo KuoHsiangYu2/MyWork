@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import lin.note.book.model.ProductBean;
+import lin.note.book.util.PropertiesTool;
 
 @WebServlet("/Cart")
 public class Cart extends HttpServlet {
@@ -40,9 +42,10 @@ public class Cart extends HttpServlet {
 
         PrintWriter out = response.getWriter();
         boolean isFindData = false;
-        String jdbcURL = "jdbc:mysql://localhost:3306/book?useUnicode=yes&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Taipei";
-        String username = "root";
-        String password = "";
+        Properties properties = PropertiesTool.getDatabaseProperties();
+        String jdbcURL = properties.getProperty("jdbcURL");
+        String username = properties.getProperty("username");
+        String password = properties.getProperty("password");
         try {
             // 修正成 MySQL 10版的 class name
             String booknum = request.getParameter("booknum");
