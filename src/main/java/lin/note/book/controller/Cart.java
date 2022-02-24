@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.Scanner;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,8 +39,10 @@ public class Cart extends HttpServlet {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        PrintWriter out = response.getWriter();
+        PrintWriter printWriter = response.getWriter();
+
         boolean isFindData = false;
+
         Properties properties = PropertiesTool.getDatabaseProperties();
         String jdbcURL = properties.getProperty("jdbcURL");
         String username = properties.getProperty("username");
@@ -70,37 +71,20 @@ public class Cart extends HttpServlet {
                 message.setCreateTime(createTime);
 
                 list.add(message);
-                Scanner sc = new Scanner(System.in);
-                System.out.println("是否要此編號(Y/N):");
-                String x = sc.next();
-                if (!("Y".contentEquals(x))) {
-                    System.out.println("請返回輸入編號網頁");
-                    list.remove(message);
-                    out.println("<a href='Input.jsp'>重回購物車</a> <br />");
-                    return;
-                }
-
-                Scanner sc1 = new Scanner(System.in);
-                System.out.println("是否要清空(Y/N):");
-                String x1 = sc1.next();
-                if ("Y".contentEquals(x1)) {
-                    list.clear();
-                    System.out.println("購物車已經被清空");
-                }
-
-                HttpSession session = request.getSession();
-                session.setAttribute("messageList", list);
             }
 
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("messageList", list);
+
             if (false == isFindData) {
-                out.println("編號輸入錯誤，資料庫裡沒有這個書籍。 <br />");
-                out.println("<a href='Input.jsp'>重回購物車</a> <br />");
+                printWriter.println("編號輸入錯誤，資料庫裡沒有這個書籍。 <br />");
+                printWriter.println("<a href='Input.jsp'>重回購物車</a> <br />");
                 return;
             }
 
             response.sendRedirect("Input.jsp");
         } catch (Exception e) {
-            out.print(e);
+            e.printStackTrace();
         } finally {
             if (resultSet != null) {
                 try {
