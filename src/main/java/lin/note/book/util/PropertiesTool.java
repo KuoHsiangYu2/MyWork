@@ -21,7 +21,7 @@ public class PropertiesTool {
         try {
             System.out.println("propertiesPath = [" + propertiesPath + "]");
             fileInputStream = new FileInputStream(propertiesPath);
-            System.out.println("fileInputStream = " + fileInputStream);
+            System.out.println("fileInputStream = [" + fileInputStream + "]");
             databaseProperties.load(fileInputStream);
             System.out.println("load database properties successful");
         } catch (FileNotFoundException e) {

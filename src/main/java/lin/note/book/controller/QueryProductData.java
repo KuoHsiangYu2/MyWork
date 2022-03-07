@@ -47,7 +47,8 @@ public class QueryProductData extends HttpServlet {
             // 修正成 MySQL 10版的 class name
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(jdbcURL, username, password);
-            preparedStatement = connection.prepareStatement("SELECT booknum, bookname, type, author, price, stock, memo FROM product ORDER BY price DESC");
+            preparedStatement = connection.prepareStatement(
+                    "SELECT booknum, bookname, type, author, price, stock, memo FROM product ORDER BY price DESC");
             resultSet = preparedStatement.executeQuery();
             out.println("<table border='1'>");
             out.println("<tr><td>編號<td>書名<td>分類<td>作者<td>價格<td>庫存<td>說明");
@@ -74,7 +75,6 @@ public class QueryProductData extends HttpServlet {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
